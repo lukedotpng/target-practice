@@ -16,7 +16,7 @@ export function FormatMission(mission: string): string {
 
 export function GetYoutubeVideoId(url: string): string | null {
 	const regexMatch = url.match(
-		/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+		/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/
 	);
 	if (regexMatch === null) {
 		return null;
