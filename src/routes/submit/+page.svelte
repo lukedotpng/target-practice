@@ -87,6 +87,8 @@
 	}
 
 	let formUpdatePopupActive = $state(false);
+
+	let maxDateInput = new Date().toISOString().split('T')[0];
 </script>
 
 <main>
@@ -293,6 +295,7 @@
 					name="date_uploaded"
 					id="date-uploaded"
 					placeholder="mm/dd/yyyy"
+					max={maxDateInput}
 					required
 				/>
 			</div>
