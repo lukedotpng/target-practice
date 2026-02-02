@@ -65,7 +65,7 @@
 		if (targetsListFetchIntervalRef) {
 			clearTimeout(targetsListFetchIntervalRef);
 		}
-		const searchQuery = e.currentTarget.value.replaceAll(' ', '');
+		const searchQuery = e.currentTarget.value;
 		targetsListFetchIntervalRef = setTimeout(() => {
 			if (!missionInput || searchQuery === '') {
 				targetsDatalistPromise = undefined;
