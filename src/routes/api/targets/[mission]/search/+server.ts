@@ -9,9 +9,6 @@ export async function GET({ params, url }) {
 		return error(400, 'Must provide a search query');
 	}
 
-	const delay = () => new Promise((resolve) => setTimeout(resolve, 100));
-	await delay();
-
 	const targetData = await db.query.targetSchema.findMany({
 		limit: 5,
 		where: and(
