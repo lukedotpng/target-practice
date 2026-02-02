@@ -25,6 +25,7 @@ export async function InsertContract(
 				mission: contractData.mission,
 				time: contractData.time,
 				videoUrl: contractData.videoUrl,
+				contractRunner: contractData.contractRunner,
 				dateUploaded: contractData.dateUploaded
 			})
 			.$returningId();

@@ -19,6 +19,7 @@ export const contractSchema = mysqlTable('contracts', {
 	}).notNull(),
 	time: int().notNull(),
 	videoUrl: text('video_url').notNull(),
+	contractRunner: text('contract-runner').notNull(),
 	dateUploaded: text('date_uploaded').notNull(),
 	gameId: text('game_id'),
 	platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),

@@ -240,6 +240,19 @@
 					onkeydown={PreventFromSubmissionOnEnter}
 				/>
 			</div>
+			<div class="input-container contract-runner">
+				<div class="label-container">
+					<label for="contract-runner">Contract Runner</label>
+				</div>
+				<input
+					type="text"
+					id="contract-runner"
+					name="contract-runner"
+					required
+					placeholder="Agent..."
+					onkeydown={PreventFromSubmissionOnEnter}
+				/>
+			</div>
 			<div class="input-container time">
 				<fieldset>
 					<legend>Time</legend>
@@ -527,6 +540,17 @@
 		& .video-url-warning {
 			font-size: var(--step--1);
 			font-style: italic;
+		}
+	}
+
+	.input-container.contract-runner {
+		width: 80%;
+		@media (width < 400px) {
+			width: 100%;
+		}
+
+		& > input {
+			width: 100%;
 		}
 	}
 

@@ -16,6 +16,7 @@ const ContractZ = z.object({
 		},
 		{ error: 'Invalid video URL' }
 	),
+	contractRunner: z.string().min(1),
 	minutes: z.coerce.number().max(59).min(0),
 	seconds: z.coerce.number().max(59).min(0),
 	time: z.coerce.number(),
@@ -30,6 +31,7 @@ export const actions = {
 			mission: formData.get('mission'),
 			targets: formData.getAll('targets'),
 			videoUrl: formData.get('video_url'),
+			contractRunner: formData.get('contract-runner'),
 			minutes: formData.get('minutes'),
 			seconds: formData.get('seconds'),
 			time: formData.get('time'),
@@ -62,6 +64,7 @@ export const actions = {
 				mission: parsedForm.data.mission,
 				time: time,
 				videoUrl: parsedForm.data.videoUrl,
+				contractRunner: parsedForm.data.contractRunner,
 				dateUploaded: parsedForm.data.dateUploaded
 			},
 			parsedForm.data.targets
