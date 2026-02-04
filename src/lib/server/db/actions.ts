@@ -21,7 +21,8 @@ export async function InsertContract(
 			.values({
 				mission: contractData.mission,
 				time: contractData.time,
-				videoUrl: contractData.videoUrl,
+				videoId: contractData.videoId,
+				videoTimestamp: contractData.videoTimestamp,
 				contractRunner: contractData.contractRunner,
 				dateUploaded: contractData.dateUploaded
 			})

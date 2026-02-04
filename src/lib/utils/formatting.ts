@@ -22,7 +22,7 @@ export function GetYoutubeVideoId(url: string): string | null {
 		return null;
 	}
 
-	if (regexMatch.length >= 7 && regexMatch[6]) {
+	if (regexMatch.length >= 7 && regexMatch[6] && regexMatch[6].length === 11) {
 		return regexMatch[6];
 	}
 

@@ -18,7 +18,8 @@ export const contractSchema = mysqlTable('contracts', {
 		enum: [MISSIONS[0], ...MISSIONS.slice(1)]
 	}).notNull(),
 	time: int().notNull(),
-	videoUrl: text('video_url').notNull(),
+	videoId: text('video_id').notNull(),
+	videoTimestamp: int('video_timestamp').notNull(),
 	contractRunner: text('contract-runner').notNull(),
 	dateUploaded: text('date_uploaded').notNull(),
 	gameId: text('game_id'),

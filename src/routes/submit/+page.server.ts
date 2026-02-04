@@ -59,11 +59,30 @@ export const actions = {
 
 		const time = parsedForm.data.minutes * 60 + parsedForm.data.seconds;
 
+		const videoUrl = new URL(parsedForm.data.videoUrl);
+		const timestampParam = videoUrl.searchParams.get('t');
+		let timestamp = 0;
+		if (timestampParam && parseInt(timestampParam)) {
+			timestamp = parseInt(timestampParam);
+		}
+
+		const videoId = GetYoutubeVideoId(parsedForm.data.videoUrl);
+		if (!videoId) {
+			return fail(400, {
+				success: false,
+				errorMessage: 'Failed to read video url'
+			});
+		}
+
+		console.log(videoId);
+		console.log(timestamp);
+
 		const res = await InsertContract(
 			{
 				mission: parsedForm.data.mission,
 				time: time,
-				videoUrl: parsedForm.data.videoUrl,
+				videoId: videoId,
+				videoTimestamp: timestamp,
 				contractRunner: parsedForm.data.contractRunner,
 				dateUploaded: parsedForm.data.dateUploaded
 			},
