@@ -28,7 +28,6 @@
 		}
 		e.currentTarget.value = restrictedString;
 	}
-	// let videoUrlInput = $state('');
 
 	let targetsAdded = $state<Target[]>([]);
 	function AddTarget(targetToAdd: Target) {
