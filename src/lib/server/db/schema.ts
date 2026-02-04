@@ -19,7 +19,7 @@ export const contractSchema = mysqlTable('contracts', {
 	}).notNull(),
 	time: int().notNull(),
 	videoId: text('video_id').notNull(),
-	videoTimestamp: int('video_timestamp').notNull(),
+	videoTimestamp: int('video_timestamp').notNull().default(0),
 	contractRunner: text('contract-runner').notNull(),
 	dateUploaded: text('date_uploaded').notNull(),
 	gameId: text('game_id'),
