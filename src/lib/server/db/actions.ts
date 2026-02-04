@@ -12,9 +12,6 @@ export async function InsertContract(
 	contractData: ContractInsert,
 	targetIds: number[]
 ): Promise<InsertContractResponse> {
-	console.log('contractData:', contractData);
-	console.log('targets:', targetIds);
-
 	let contractInsertRes: {
 		id: number;
 	}[];
