@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Target } from '$lib/types/db';
-	import { PreventFromSubmissionOnEnter } from '$lib/utils/helpers';
+	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 
 	type TargetsInputProps = {
 		targetsAdded: Target[];
@@ -69,7 +69,7 @@
 		id="target-search"
 		bind:value={targetSearchInput}
 		oninput={OnTargetSearchInput}
-		onkeydown={PreventFromSubmissionOnEnter}
+		onkeydown={PreventSubmissionOnEnter}
 		disabled={missionInput === ''}
 		placeholder="Add target..."
 	/>

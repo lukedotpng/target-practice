@@ -1,4 +1,4 @@
-export function PreventFromSubmissionOnEnter(
+export function PreventSubmissionOnEnter(
 	e: KeyboardEvent & {
 		currentTarget: EventTarget & HTMLInputElement;
 	}

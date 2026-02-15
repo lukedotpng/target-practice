@@ -1,5 +1,5 @@
 <script>
-	import { PreventFromSubmissionOnEnter } from '$lib/utils/helpers';
+	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 </script>
 
 <div class="input-container video">
@@ -15,7 +15,7 @@
 		name="video_url"
 		required
 		placeholder="youtube.com/watch?v=L2KBq_nCRIc"
-		onkeydown={PreventFromSubmissionOnEnter}
+		onkeydown={PreventSubmissionOnEnter}
 	/>
 </div>
 

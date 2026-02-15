@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PreventFromSubmissionOnEnter } from '$lib/utils/helpers';
+	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 
 	type TimeInputProps = {
 		minutesInput: number | undefined;
@@ -37,7 +37,7 @@
 			min="0"
 			maxlength="2"
 			placeholder="mm"
-			onkeydown={PreventFromSubmissionOnEnter}
+			onkeydown={PreventSubmissionOnEnter}
 		/>
 		<span>:</span>
 		<input
@@ -50,7 +50,7 @@
 			min="0"
 			maxlength="2"
 			placeholder="ss"
-			onkeydown={PreventFromSubmissionOnEnter}
+			onkeydown={PreventSubmissionOnEnter}
 			required
 		/>
 	</fieldset>

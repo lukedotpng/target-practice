@@ -1,5 +1,5 @@
 <script>
-	import { PreventFromSubmissionOnEnter } from '$lib/utils/helpers';
+	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 </script>
 
 <div class="input-container contract-runner">
@@ -12,7 +12,7 @@
 		name="contract-runner"
 		required
 		placeholder="Agent..."
-		onkeydown={PreventFromSubmissionOnEnter}
+		onkeydown={PreventSubmissionOnEnter}
 	/>
 </div>
 
