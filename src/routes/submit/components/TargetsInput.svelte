@@ -258,7 +258,7 @@
 						fill: var(--text-color);
 					}
 					&:hover > svg {
-						fill: var(--secondary-color);
+						fill: var(--error-color);
 					}
 				}
 			}
