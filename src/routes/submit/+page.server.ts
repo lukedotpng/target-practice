@@ -74,9 +74,6 @@ export const actions = {
 			});
 		}
 
-		console.log(videoId);
-		console.log(timestamp);
-
 		const res = await InsertContract(
 			{
 				mission: parsedForm.data.mission,
