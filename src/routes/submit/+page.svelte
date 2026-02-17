@@ -81,8 +81,6 @@
 		position: relative;
 		max-width: 40rem;
 		margin: auto;
-		margin-top: 3rem;
-		margin-bottom: 3rem;
 
 		& > h2 {
 			text-align: center;
