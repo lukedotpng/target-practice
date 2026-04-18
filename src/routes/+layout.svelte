@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
+	import Footer from './components/Footer.svelte';
 
 	let { children } = $props();
 </script>
@@ -22,6 +23,7 @@
 	</div>
 </header>
 {@render children()}
+<Footer />
 
 <style>
 	header {
