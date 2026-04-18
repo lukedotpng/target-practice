@@ -52,8 +52,19 @@
 				targetsDatalistPromise = undefined;
 				return;
 			}
+
+			const excludedTargetIds: number[] = [];
+			for (const target of targetsAdded) {
+				excludedTargetIds.push(target.id);
+			}
+			const excludedTargetsParam = excludedTargetIds.join(',');
 			targetsDatalistPromise = fetch(
-				'/api/targets/' + missionInput + '/search?query=' + searchQuery
+				'/api/targets/' +
+					missionInput +
+					'/search?query=' +
+					searchQuery +
+					'&excluded=' +
+					excludedTargetsParam
 			).then((res) => res.json()) as Promise<Target[]>;
 			console.log('fetching content with query:', searchQuery);
 		}, 200);
@@ -82,14 +93,7 @@
 			</li>
 		{:then targetsDatalist}
 			{#each targetsDatalist as target (target.id)}
-				<li
-					class={[
-						'target-option-list-item',
-						targetsAdded.filter((addedTarget) => target.id === addedTarget.id).length === 1
-							? 'added'
-							: ''
-					]}
-				>
+				<li class="target-option-list-item">
 					<div class="info">
 						<span class="name">{target.name}</span>
 						<span class="description">{target.description}</span>
@@ -152,10 +156,6 @@
 			width: 100%;
 			position: relative;
 			z-index: 10;
-			padding: 0.1rem 0.1rem;
-			&::placeholder {
-				font-style: italic;
-			}
 		}
 
 		& > input:disabled {
@@ -194,9 +194,6 @@
 				&:first-child {
 					border: none;
 				}
-				&.added .info {
-					text-decoration: line-through;
-				}
 				& .info {
 					flex: 1;
 
@@ -211,9 +208,6 @@
 						font-size: var(--step--1);
 						display: block;
 					}
-				}
-				&.added > .add-target {
-					display: none;
 				}
 				& .add-target {
 					padding: 0.2rem 0.3rem;
