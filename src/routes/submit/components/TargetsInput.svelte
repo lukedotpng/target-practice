@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Target } from '$lib/types/db';
+	import type { Target } from '$lib/types';
 	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 
 	type TargetsInputProps = {

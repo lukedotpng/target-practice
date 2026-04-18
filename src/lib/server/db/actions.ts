@@ -1,4 +1,4 @@
-import type { ContractInsert, TargetContractEntryInsert } from '$lib/types/db';
+import type { ContractInsert, TargetContractEntryInsert } from '$lib/types';
 import { db } from '.';
 import { contractSchema, targetContractEntrySchema } from './schema';
 

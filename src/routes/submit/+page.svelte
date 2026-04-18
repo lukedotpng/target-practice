@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { Target } from '$lib/types/db';
+	import type { Target } from '$lib/types';
 	import { fade } from 'svelte/transition';
 
 	import MissionInput from './components/MissionInput.svelte';
