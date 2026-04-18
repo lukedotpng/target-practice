@@ -79,11 +79,12 @@
 
 	.form-container {
 		position: relative;
-		max-width: 40rem;
+		max-width: 30rem;
 		margin: auto;
 
 		& > h2 {
 			text-align: center;
+			font-weight: bold;
 			font-size: var(--step-1);
 		}
 	}
@@ -103,7 +104,7 @@
 		z-index: 100;
 		background: var(--success-color);
 		padding: 0.25rem 1rem;
-		border: 2px solid var(--text-color);
+		border: 2px solid var(--base-color-12);
 		border-radius: 10px;
 		top: 0;
 		left: 50%;
@@ -130,8 +131,8 @@
 	}
 
 	.contract-form {
-		background-color: var(--base-color-2);
-		border: 2px solid var(--text-color);
+		background-color: var(--base-color-4);
+		border: 2px solid var(--base-color-12);
 		border-radius: 5px;
 		padding: 0 0.5rem;
 	}
@@ -141,11 +142,13 @@
 		margin: 0.5rem auto;
 		margin-top: 1.5rem;
 		padding: 0.1rem 2rem;
-		border: 1px solid var(--text-color);
-		border-radius: 3px;
-		background-color: var(--base-color-3);
+		border: 2px solid var(--base-color-8);
+		border-radius: 5px;
+		background-color: var(--base-color-5);
 		&:hover {
-			background-color: var(--secondary-color);
+			background-color: var(--primary-color);
+			border-color: var(--base-color-12);
+			text-shadow: 0 0 2px var(--base-color-1);
 		}
 	}
 
