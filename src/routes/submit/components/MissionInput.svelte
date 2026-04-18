@@ -41,7 +41,7 @@
 		& .warning-text {
 			font-size: var(--step--1);
 			font-style: italic;
-			color: var(--error-color);
+			color: var(--primary-color);
 		}
 	}
 </style>

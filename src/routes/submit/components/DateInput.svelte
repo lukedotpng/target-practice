@@ -20,7 +20,6 @@
 	.date-uploaded {
 		margin: 0.5rem 0;
 		& input {
-			padding: 0.1rem 0.1rem;
 			&::placeholder {
 				font-style: italic;
 			}
