@@ -25,7 +25,7 @@ export const contractSchema = mysqlTable('contracts', {
 	dateUploaded: text('date_uploaded').notNull(),
 	gameId: text('game_id'),
 	platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),
-	visible: boolean().notNull().default(true)
+	verified: boolean().notNull().default(true)
 });
 
 export const targetContractEntrySchema = mysqlTable('target_contract_entries', {
