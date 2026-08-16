@@ -8,6 +8,7 @@
 	import VideoInput from './components/VideoInput.svelte';
 	import ContractRunnerInput from './components/ContractRunnerInput.svelte';
 	import TimeInput from './components/TimeInput.svelte';
+	import ScoreInput from './components/ScoreInput.svelte';
 	import DateInput from './components/DateInput.svelte';
 
 	let { form } = $props();
@@ -19,6 +20,8 @@
 
 	let minutesInput = $state<number>();
 	let secondsInput = $state<number>();
+
+	let scoreInput = $state<number>();
 
 	let targetsAdded = $state<Target[]>([]);
 
@@ -59,6 +62,7 @@
 			<VideoInput />
 			<ContractRunnerInput />
 			<TimeInput bind:minutesInput bind:secondsInput />
+			<ScoreInput bind:scoreInput />
 			<DateInput />
 
 			<button class="submit" type="submit">Submit</button>

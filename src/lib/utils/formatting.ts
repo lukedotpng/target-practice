@@ -1,3 +1,5 @@
+import { ScoreToSeconds } from './helpers';
+
 export function FormatMission(mission: string): string {
 	const missionStringSplit = mission.split('-');
 
@@ -27,4 +29,29 @@ export function GetYoutubeVideoId(url: string): string | null {
 	}
 
 	return null;
+}
+
+export function SecondsToTimeString(totalSeconds: number) {
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+	const secondsFixed = seconds.toFixed(3);
+
+	const minutesString = minutes < 10 ? (minutes === 0 ? '00' : '0' + minutes) : minutes + '';
+	const secondsString =
+		seconds < 10 ? (seconds === 0 ? '00.000' : '0' + secondsFixed) : secondsFixed;
+
+	return minutesString + ':' + secondsString;
+}
+
+export function ScoreToTimeString(score: number | undefined) {
+	if (score === undefined) {
+		return 'Error No Time';
+	}
+	const seconds = ScoreToSeconds(score);
+
+	if (seconds === undefined) {
+		return 'Error No Time';
+	}
+
+	return SecondsToTimeString(seconds);
 }
