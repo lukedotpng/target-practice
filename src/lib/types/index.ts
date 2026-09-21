@@ -7,6 +7,10 @@ export type TargetContractEntryInsert = InferInsertModel<typeof targetContractEn
 
 export type TargetSelect = InferSelectModel<typeof targetSchema>;
 export type ContractSelect = InferSelectModel<typeof contractSchema>;
-
 export type Target = TargetSelect & { contractCount?: number };
-export type Contract = ContractSelect & { targets: Target[] };
+
+export type TargetContractEntryWithTarget = TargetContractEntryInsert & { target: Target };
+
+export type Contract = ContractSelect & {
+	targetContractEntries: TargetContractEntryWithTarget[];
+};

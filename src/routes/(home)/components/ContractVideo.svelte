@@ -31,10 +31,10 @@
 		allowfullscreen
 	></iframe>
 	<div class="targets">
-		{#each contract.targets as target (target.id)}
-			<div class={TargetSearchedFor(target) ? 'searched-for' : ''}>
+		{#each contract.targetContractEntries as targetContractEntry (targetContractEntry.id)}
+			<div class={TargetSearchedFor(targetContractEntry.target) ? 'searched-for' : ''}>
 				<p>
-					{target.name}
+					{targetContractEntry.target.name}
 				</p>
 			</div>
 		{/each}

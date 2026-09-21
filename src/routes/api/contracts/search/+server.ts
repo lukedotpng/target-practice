@@ -1,5 +1,7 @@
 import { db } from '$lib/server/db';
+import { contractSchema, targetContractEntrySchema } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
+import { inArray } from 'drizzle-orm';
 
 export async function GET({ url }) {
 	const targetsParam = url.searchParams.get('targets');
@@ -22,15 +24,19 @@ export async function GET({ url }) {
 	}
 
 	const contractData = await db.query.contractSchema.findMany({
-		where: {
-			targets: {
-				id: {
-					in: targetIds
+		where: inArray(
+			contractSchema.id,
+			db
+				.select({ contractId: targetContractEntrySchema.contractId })
+				.from(targetContractEntrySchema)
+				.where(inArray(targetContractEntrySchema.targetId, targetIds))
+		),
+		with: {
+			targetContractEntries: {
+				with: {
+					target: true
 				}
 			}
-		},
-		with: {
-			targets: true
 		}
 	});
 
