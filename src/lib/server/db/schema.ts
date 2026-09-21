@@ -1,6 +1,17 @@
-import { defineRelations } from 'drizzle-orm';
 import { MISSIONS } from '../../utils/constants';
-import { bigint, boolean, int, mysqlTable, serial, text } from 'drizzle-orm/mysql-core';
+import {
+	bigint,
+	boolean,
+	int,
+	mysqlTable,
+	primaryKey,
+	serial,
+	text,
+	timestamp,
+	varchar
+} from 'drizzle-orm/mysql-core';
+import type { AdapterAccountType } from '@auth/sveltekit/adapters';
+import { relations } from 'drizzle-orm/relations';
 
 export const targetSchema = mysqlTable('targets', {
 	id: serial().primaryKey(),
@@ -39,20 +50,91 @@ export const targetContractEntrySchema = mysqlTable('target_contract_entries', {
 		.references(() => contractSchema.id)
 });
 
-export const relations = defineRelations(
-	{ targetSchema, contractSchema, targetContractEntrySchema },
-	(r) => ({
-		targetSchema: {
-			contracts: r.many.contractSchema({
-				from: r.targetSchema.id.through(r.targetContractEntrySchema.targetId),
-				to: r.contractSchema.id.through(r.targetContractEntrySchema.contractId)
-			})
-		},
-		contractSchema: {
-			targets: r.many.targetSchema({
-				from: r.contractSchema.id.through(r.targetContractEntrySchema.contractId),
-				to: r.targetSchema.id.through(r.targetContractEntrySchema.targetId)
-			})
-		}
-	})
+// AUTH SCHEMAS
+export const userSchema = mysqlTable('user', {
+	id: varchar('id', { length: 255 })
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	name: varchar('name', { length: 255 }),
+	global_name: varchar('global_name', { length: 255 }),
+	username: varchar('username', { length: 255 }),
+	admin: boolean().default(false),
+	email: varchar('email', { length: 255 }).unique(),
+	emailVerified: timestamp('emailVerified', {
+		mode: 'date',
+		fsp: 3
+	}),
+	image: varchar('image', { length: 255 })
+});
+
+export const accountSchema = mysqlTable(
+	'account',
+	{
+		userId: varchar('userId', { length: 255 })
+			.notNull()
+			.references(() => userSchema.id, { onDelete: 'cascade' }),
+		type: varchar('type', { length: 255 }).$type<AdapterAccountType>().notNull(),
+		provider: varchar('provider', { length: 255 }).notNull(),
+		providerAccountId: varchar('providerAccountId', { length: 255 }).notNull(),
+		refresh_token: varchar('refresh_token', { length: 255 }),
+		access_token: varchar('access_token', { length: 255 }),
+		expires_at: int('expires_at'),
+		token_type: varchar('token_type', { length: 255 }),
+		scope: varchar('scope', { length: 255 }),
+		id_token: varchar('id_token', { length: 2048 }),
+		session_state: varchar('session_state', { length: 255 })
+	},
+	(account) => [
+		primaryKey({
+			columns: [account.provider, account.providerAccountId]
+		})
+	]
 );
+
+export const sessionSchema = mysqlTable('session', {
+	sessionToken: varchar('sessionToken', { length: 255 }).primaryKey(),
+	userId: varchar('userId', { length: 255 })
+		.notNull()
+		.references(() => userSchema.id, { onDelete: 'cascade' }),
+	expires: timestamp('expires', { mode: 'date' }).notNull()
+});
+
+// RELATIONS Mostly enerated from drizzle-kit pull
+
+export const accountRelations = relations(accountSchema, ({ one }) => ({
+	user: one(userSchema, {
+		fields: [accountSchema.userId],
+		references: [userSchema.id]
+	})
+}));
+
+export const userRelations = relations(userSchema, ({ many }) => ({
+	accounts: many(accountSchema),
+	sessions: many(sessionSchema)
+}));
+
+export const sessionRelations = relations(sessionSchema, ({ one }) => ({
+	user: one(userSchema, {
+		fields: [sessionSchema.userId],
+		references: [userSchema.id]
+	})
+}));
+
+export const targetContractEntryRelations = relations(targetContractEntrySchema, ({ one }) => ({
+	contract: one(contractSchema, {
+		fields: [targetContractEntrySchema.contractId],
+		references: [contractSchema.id]
+	}),
+	target: one(targetSchema, {
+		fields: [targetContractEntrySchema.targetId],
+		references: [targetSchema.id]
+	})
+}));
+
+export const contractRelations = relations(contractSchema, ({ many }) => ({
+	targetContractEntries: many(targetContractEntrySchema)
+}));
+
+export const targetRelations = relations(targetSchema, ({ many }) => ({
+	targetContractEntries: many(targetContractEntrySchema)
+}));
