@@ -99,7 +99,7 @@ export const sessionSchema = mysqlTable('session', {
 	expires: timestamp('expires', { mode: 'date' }).notNull()
 });
 
-// RELATIONS Mostly enerated from drizzle-kit pull
+// RELATIONS Mostly generated from drizzle-kit pull
 
 export const accountRelations = relations(accountSchema, ({ one }) => ({
 	user: one(userSchema, {
