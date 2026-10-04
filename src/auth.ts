@@ -40,5 +40,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 		session({ session }) {
 			return session;
 		}
-	}
+	},
+	trustHost: true
 });

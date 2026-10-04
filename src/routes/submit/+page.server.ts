@@ -1,10 +1,20 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import * as z from 'zod';
 
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { MISSIONS } from '$lib/utils/constants';
 import { GetYoutubeVideoId } from '$lib/utils/formatting';
 import { InsertContract } from '$lib/server/db/actions';
+
+export const load: PageServerLoad = async (event) => {
+	const session = await event.locals.auth();
+
+	if (!session?.user) {
+		redirect(303, '/signin?redirect=submit');
+	}
+
+	return { session };
+};
 
 const ContractZ = z.object({
 	mission: z.literal(MISSIONS),
