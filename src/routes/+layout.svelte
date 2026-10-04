@@ -152,6 +152,10 @@
 			}
 		}
 
+		button {
+			border: none;
+		}
+
 		:root {
 			color-scheme: light dark;
 			--primary-color: oklch(0.6391 0.1623 22.82);
