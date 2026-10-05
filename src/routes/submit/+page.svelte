@@ -58,7 +58,9 @@
 				<pre class="form-error-message">{form.errorMessage}</pre>
 			{/if}
 			<MissionInput bind:missionInput {OnChangeMission} />
-			<TargetsInput bind:targetsAdded {missionInput} />
+			{#key missionInput}
+				<TargetsInput bind:targetsAdded {missionInput} />
+			{/key}
 			<VideoInput />
 			<ContractRunnerInput />
 			<TimeInput bind:minutesInput bind:secondsInput />
