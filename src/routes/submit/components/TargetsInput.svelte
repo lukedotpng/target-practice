@@ -98,7 +98,14 @@
 						<span class="name">{target.name}</span>
 						<span class="description">{target.description}</span>
 					</div>
-					<button type="button" class="add-target" onclick={() => AddTarget(target)}> Add </button>
+					<button type="button" class="add-target" onclick={() => AddTarget(target)}>
+						<!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc. -->
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path
+								d="M160 144C151.2 144 144 151.2 144 160L144 480C144 488.8 151.2 496 160 496L480 496C488.8 496 496 488.8 496 480L496 160C496 151.2 488.8 144 480 144L160 144zM96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 160zM296 408L296 344L232 344C218.7 344 208 333.3 208 320C208 306.7 218.7 296 232 296L296 296L296 232C296 218.7 306.7 208 320 208C333.3 208 344 218.7 344 232L344 296L408 296C421.3 296 432 306.7 432 320C432 333.3 421.3 344 408 344L344 344L344 408C344 421.3 333.3 432 320 432C306.7 432 296 421.3 296 408z"
+							/>
+						</svg>
+					</button>
 				</li>
 			{/each}
 			{#if targetsDatalist === undefined || targetSearchInput === ''}
@@ -156,6 +163,10 @@
 			width: 100%;
 			position: relative;
 			z-index: 10;
+
+			&:not(:has(+ .target-options-list .hide-list)):focus {
+				border-radius: 5px 5px 0 0;
+			}
 		}
 
 		& > input:disabled {
@@ -164,15 +175,11 @@
 
 		& .target-options-list {
 			position: absolute;
-			width: calc(100% - 1rem);
+			width: 100%;
 			z-index: 5;
-			margin: 0 0.5rem;
-			padding: 0 0.5rem;
-			background-color: var(--base-color-2);
 			border: 2px solid var(--text-color);
 			border-top: none;
 			border-radius: 0 0 5px 5px;
-			box-shadow: 0px 0px 8px var(--text-color);
 			min-height: 2rem;
 			list-style: none;
 
@@ -183,14 +190,19 @@
 			& > .target-option-list-item {
 				display: flex;
 				align-items: center;
-				min-height: 3.25rem;
+				padding: 0.5rem;
+
+				background-color: var(--base-color-2);
+				&:nth-child(even) {
+					background-color: var(--base-color-3);
+				}
+
 				&.message {
-					min-height: 2rem;
 					& p {
 						text-align: center;
 					}
 				}
-				border-top: 2px solid var(--text-color);
+				border-top: 1px solid var(--text-color);
 				&:first-child {
 					border: none;
 				}
@@ -206,17 +218,23 @@
 
 					& .description {
 						font-size: var(--step--1);
+						font-style: italic;
 						display: block;
 					}
 				}
 				& .add-target {
-					padding: 0.2rem 0.3rem;
-					height: 100%;
-					border: 1px solid var(--text-color);
-					border-radius: 3px;
-					background-color: var(--base-color-3);
+					background: none;
+					border: none;
+					height: 2ch;
+					aspect-ratio: 1/1;
+					svg {
+						fill: var(--text-color);
+					}
 					&:hover {
-						background-color: var(--secondary-color);
+						cursor: pointer;
+						svg {
+							fill: var(--primary-color);
+						}
 					}
 				}
 			}
