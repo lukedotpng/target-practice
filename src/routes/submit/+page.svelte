@@ -7,7 +7,6 @@
 	import TargetsInput from './components/TargetsInput.svelte';
 	import VideoInput from './components/VideoInput.svelte';
 	import ContractRunnerInput from './components/ContractRunnerInput.svelte';
-	import TimeInput from './components/TimeInput.svelte';
 	import ScoreInput from './components/ScoreInput.svelte';
 	import DateInput from './components/DateInput.svelte';
 
@@ -17,9 +16,6 @@
 	function OnChangeMission() {
 		targetsAdded = [];
 	}
-
-	let minutesInput = $state<number>();
-	let secondsInput = $state<number>();
 
 	let scoreInput = $state<number>();
 
@@ -63,7 +59,6 @@
 			{/key}
 			<VideoInput />
 			<ContractRunnerInput />
-			<TimeInput bind:minutesInput bind:secondsInput />
 			<ScoreInput bind:scoreInput />
 			<DateInput />
 

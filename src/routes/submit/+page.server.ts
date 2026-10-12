@@ -27,24 +27,30 @@ const ContractZ = z.object({
 		{ error: 'Invalid video URL' }
 	),
 	contractRunner: z.string().min(1),
-	minutes: z.coerce.number().max(59).min(0),
-	seconds: z.coerce.number().max(59).min(0),
-	time: z.coerce.number(),
+	score: z.coerce.number(),
+	userSubmitted: z.string().min(1),
 	dateUploaded: z.iso.date()
 });
 
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ locals, request }) => {
 		const formData = await request.formData();
+
+		const session = await locals.auth();
+		if (!session?.user) {
+			return fail(401, {
+				success: false,
+				errorMessage: 'Not Authorized'
+			});
+		}
 
 		const parsedForm = z.safeParse(ContractZ, {
 			mission: formData.get('mission'),
 			targets: formData.getAll('targets'),
 			videoUrl: formData.get('video_url'),
 			contractRunner: formData.get('contract-runner'),
-			minutes: formData.get('minutes'),
-			seconds: formData.get('seconds'),
-			time: formData.get('time'),
+			score: formData.get('score'),
+			userSubmitted: session.user.id,
 			dateUploaded: formData.get('date_uploaded')
 		});
 
@@ -67,8 +73,6 @@ export const actions = {
 			});
 		}
 
-		const time = parsedForm.data.minutes * 60 + parsedForm.data.seconds;
-
 		const videoUrl = new URL(parsedForm.data.videoUrl);
 		const timestampParam = videoUrl.searchParams.get('t');
 		let timestamp = 0;
@@ -84,17 +88,17 @@ export const actions = {
 			});
 		}
 
-		const res = await InsertContract(
-			{
-				mission: parsedForm.data.mission,
-				time: time,
-				videoId: videoId,
-				videoTimestamp: timestamp,
-				contractRunner: parsedForm.data.contractRunner,
-				dateUploaded: parsedForm.data.dateUploaded
-			},
-			parsedForm.data.targets
-		);
+		const contract = {
+			mission: parsedForm.data.mission,
+			score: parsedForm.data.score,
+			videoId: videoId,
+			videoTimestamp: timestamp,
+			contractRunner: parsedForm.data.contractRunner,
+			dateUploaded: new Date(parsedForm.data.dateUploaded),
+			userSubmitted: session.user.id
+		};
+
+		const res = await InsertContract(contract, parsedForm.data.targets);
 
 		if (!res.success) {
 			return fail(400, {

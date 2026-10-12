@@ -15,21 +15,29 @@ export async function InsertContract(
 	let contractInsertRes: {
 		id: number;
 	}[];
+
+	console.log('contractData:', contractData);
+
 	try {
 		contractInsertRes = await db
 			.insert(contractSchema)
 			.values({
 				mission: contractData.mission,
-				time: contractData.time,
+				score: contractData.score,
 				videoId: contractData.videoId,
 				videoTimestamp: contractData.videoTimestamp,
 				contractRunner: contractData.contractRunner,
-				dateUploaded: contractData.dateUploaded
+				dateUploaded: contractData.dateUploaded,
+				userSubmitted: contractData.userSubmitted,
+				dateAdded: contractData.dateAdded
 			})
 			.$returningId();
 	} catch (e) {
 		if (e && typeof e === 'object' && 'message' in e) {
 			console.error('INSERT CONTRACT:', e.message);
+			if ('cause' in e) {
+				console.log('INSERT CONTRACT:', e.cause);
+			}
 		} else {
 			console.error('INSERT CONTRACT:', e);
 		}

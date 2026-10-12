@@ -2,6 +2,7 @@ import { MISSIONS } from '../../utils/constants';
 import {
 	bigint,
 	boolean,
+	date,
 	int,
 	mysqlTable,
 	primaryKey,
@@ -29,14 +30,16 @@ export const contractSchema = mysqlTable('contracts', {
 		// Silly workaround for type errors
 		enum: [MISSIONS[0], ...MISSIONS.slice(1)]
 	}).notNull(),
-	time: int().notNull(),
+	time: int(),
 	score: int().notNull().default(-1),
 	videoId: text('video_id').notNull(),
 	videoTimestamp: int('video_timestamp').notNull().default(0),
 	contractRunner: text('contract_runner').notNull(),
-	dateUploaded: text('date_uploaded').notNull(),
+	dateUploaded: date('date_uploaded').notNull(),
 	gameId: text('game_id'),
 	platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),
+	userSubmitted: varchar('user_submitted', { length: 255 }).references(() => userSchema.id),
+	dateAdded: timestamp('date_added').defaultNow(),
 	verified: boolean().notNull().default(true)
 });
 
@@ -47,7 +50,9 @@ export const targetContractEntrySchema = mysqlTable('target_contract_entries', {
 		.references(() => targetSchema.id),
 	contractId: bigint('contract_id', { mode: 'number', unsigned: true })
 		.notNull()
-		.references(() => contractSchema.id)
+		.references(() => contractSchema.id),
+	killMethod: text('kill_method'),
+	disguise: text('disguise')
 });
 
 // AUTH SCHEMAS
