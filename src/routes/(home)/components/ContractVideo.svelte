@@ -23,7 +23,7 @@
 		title="Contract"
 		src={'https://www.youtube-nocookie.com/embed/' +
 			contract.videoId +
-			'?t=' +
+			'?color=white&start=' +
 			contract.videoTimestamp}
 		frameborder="0"
 		allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
