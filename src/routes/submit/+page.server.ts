@@ -19,6 +19,7 @@ export const load: PageServerLoad = async (event) => {
 const ContractZ = z.object({
 	mission: z.literal(MISSIONS),
 	targets: z.array(z.coerce.number()).min(1, 'Must provide at least one target'),
+	targetKills: z.array(z.string()).min(1, 'Must provide target kill methods'),
 	videoUrl: z.stringFormat(
 		'youtube-url',
 		(value) => {
@@ -47,6 +48,7 @@ export const actions = {
 		const parsedForm = z.safeParse(ContractZ, {
 			mission: formData.get('mission'),
 			targets: formData.getAll('targets'),
+			targetKills: formData.getAll('target_kills'),
 			videoUrl: formData.get('video_url'),
 			contractRunner: formData.get('contract-runner'),
 			score: formData.get('score'),
@@ -60,7 +62,7 @@ export const actions = {
 			if (errorTree.properties) {
 				for (const prop of Object.entries(errorTree.properties)) {
 					console.log(prop[0] + ':', prop[1].errors[0]);
-					errorMessage += '🞴 ' + prop[1].errors[0] + '\n';
+					errorMessage += '> ' + prop[1].errors[0] + '\n';
 				}
 			}
 			if (errorMessage === '') {
@@ -98,7 +100,11 @@ export const actions = {
 			userSubmitted: session.user.id
 		};
 
-		const res = await InsertContract(contract, parsedForm.data.targets);
+		const res = await InsertContract(
+			contract,
+			parsedForm.data.targets,
+			parsedForm.data.targetKills
+		);
 
 		if (!res.success) {
 			return fail(400, {

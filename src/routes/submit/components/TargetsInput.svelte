@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { Target } from '$lib/types';
+	import type { ContractTarget, Target } from '$lib/types';
+	import { KILL_METHODS } from '$lib/utils/constants';
 	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
 
 	type TargetsInputProps = {
-		targetsAdded: Target[];
+		targetsAdded: ContractTarget[];
 		missionInput: string;
 	};
 
@@ -17,13 +18,17 @@
 		if (targetsAdded.filter((target) => target.id === targetToAdd.id).length > 0) {
 			console.error('Error: Target has already been added');
 		} else {
-			targetsAdded.push(targetToAdd);
+			const targetWithKillMethodToAdd = {
+				...targetToAdd,
+				killMethod: 'Any Method'
+			};
+			targetsAdded.push(targetWithKillMethodToAdd);
 		}
 		targetSearchInput = '';
 		targetsDatalistPromise = undefined;
 	}
 
-	function RemoveTarget(targetToRemove: Target) {
+	function RemoveTarget(targetToRemove: ContractTarget) {
 		const targetToRemoveIndex = targetsAdded.findIndex(
 			(targetAdded) => targetAdded.id === targetToRemove.id
 		);
@@ -139,6 +144,25 @@
 								/>
 							</svg>
 						</button>
+						<!-- <p>Kill Method:</p> -->
+						<select name="killMethod" id="killMethod" bind:value={target.killMethod}>
+							<option>{KILL_METHODS[0]}</option>
+							<optgroup label="Weapons">
+								{#each KILL_METHODS.slice(1, 12) as method (method)}
+									<option>{method}</option>
+								{/each}
+							</optgroup>
+							<optgroup label="Unique Kills">
+								{#each KILL_METHODS.slice(12, 20) as method (method)}
+									<option>{method}</option>
+								{/each}
+							</optgroup>
+							<optgroup label="Melee Weapons">
+								{#each KILL_METHODS.slice(20) as method (method)}
+									<option>{method}</option>
+								{/each}
+							</optgroup>
+						</select>
 					</li>
 				{/each}
 			</ul>
@@ -146,6 +170,9 @@
 	{/if}
 	{#each targetsAdded as target (target.id)}
 		<input type="number" name="targets" value={target.id} hidden />
+	{/each}
+	{#each targetsAdded as target (target.id + target.killMethod)}
+		<input name="target_kills" value={target.killMethod} hidden />
 	{/each}
 </div>
 
@@ -157,7 +184,6 @@
 			width: 100%;
 		}
 		position: relative;
-		/*padding: 0.2rem 0;*/
 
 		& > input {
 			width: 100%;
@@ -248,18 +274,35 @@
 			padding-left: 1.5rem;
 
 			& > .targets-list-item {
+				position: relative;
+				display: grid;
+				gap: 0.2rem;
 				height: 100%;
 				&:first-child {
 					margin-top: 0;
 				}
 				margin: 0.5rem 0;
 
+				&::before {
+					content: '';
+					position: absolute;
+					inset: 0;
+					top: 0.2lh;
+					left: -0.75rem;
+
+					margin-block: auto;
+					width: 2px;
+					background-color: white;
+				}
+
 				& > button {
 					display: flex;
+					width: fit-content;
 					align-items: center;
 					gap: 0.5rem;
 					background: none;
 					border: none;
+					grid-column: span 2;
 
 					&:hover > p {
 						text-decoration: line-through;
@@ -272,6 +315,10 @@
 					&:hover > svg {
 						fill: var(--error-color);
 					}
+				}
+
+				& > select {
+					width: min-content;
 				}
 			}
 		}

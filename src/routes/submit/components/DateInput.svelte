@@ -1,4 +1,10 @@
-<script>
+<script lang="ts">
+	type DateInputProps = {
+		dateInput: string | undefined;
+	};
+
+	let { dateInput = $bindable() }: DateInputProps = $props();
+
 	const maxDateInput = new Date().toISOString().split('T')[0];
 </script>
 
@@ -7,6 +13,7 @@
 		<label for="date-uploaded">Date Uploaded</label>
 	</div>
 	<input
+		bind:value={dateInput}
 		type="date"
 		name="date_uploaded"
 		id="date-uploaded"

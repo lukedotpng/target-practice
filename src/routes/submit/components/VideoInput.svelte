@@ -1,5 +1,10 @@
-<script>
+<script lang="ts">
 	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
+	type VideoInputProps = {
+		videoInput: string | undefined;
+	};
+
+	let { videoInput = $bindable() }: VideoInputProps = $props();
 </script>
 
 <div class="input-container video">
@@ -10,6 +15,7 @@
 		</label>
 	</div>
 	<input
+		bind:value={videoInput}
 		type="url"
 		id="video_url"
 		name="video_url"

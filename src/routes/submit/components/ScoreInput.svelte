@@ -28,6 +28,7 @@
 		<input
 			bind:value={scoreInput}
 			oninput={HandleScoreInput}
+			required
 			type="number"
 			name="score"
 			id="score"

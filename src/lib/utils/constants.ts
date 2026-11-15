@@ -32,9 +32,9 @@ export const MISSIONS = [
 	'the-farewell'
 ];
 
+export const TUTORIAL_MISSIONS = ['freeform-training', 'the-final-test'];
+
 export const MAIN_MISSIONS = [
-	'freeform-training',
-	'the-final-test',
 	'the-showstopper',
 	'world-of-tomorrow',
 	'a-gilded-cage',
@@ -57,14 +57,46 @@ export const MAIN_MISSIONS = [
 	'the-farewell'
 ];
 
+export const PATIENT_ZERO = ['the-source', 'the-author', 'patient-zero'];
+
 export const SIDE_MISSIONS = [
 	'holiday-hoarders',
 	'landslide',
 	'the-icon',
-	'the-author',
 	'a-house-built-on-sand',
-	'the-source',
-	'patient-zero',
 	'hokkaido-snow-festival',
 	'the-dartmoor-garden-show'
+];
+
+export const KILL_METHODS = [
+	'Any Method',
+	// Weapons
+	'Silenced Pistol',
+	'Silenced SMG',
+	'Silenced Assault Rifle',
+	'Silenced Shotgun',
+	'Silenced Sniper Rifle',
+	'Loud Pistol',
+	'Loud SMG',
+	'Loud Assault Rifle',
+	'Loud Shotgun',
+	'Loud Sniper Rifle',
+	'Explosive Device',
+	// Unique Kills
+	'Explosion Accident',
+	'Falling Object',
+	'Fall',
+	'Drowning',
+	'Fire',
+	'Electrocution',
+	'Consumed Poison',
+	'Injected Poison',
+	// Melee Items
+	'Fiberwire',
+	'Neck Snap',
+	'Melee Weapon (Small)',
+	'Melee Weapon (Large)',
+	'Thrown Weapon (Small)',
+	'Thrown Weapon (Large)',
+	'Misc (Muffin, Banana, etc.)'
 ];

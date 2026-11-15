@@ -1,5 +1,10 @@
-<script>
+<script lang="ts">
 	import { PreventSubmissionOnEnter } from '$lib/utils/helpers';
+	type ContractRunnerInputProps = {
+		contractRunnerInput: string | undefined;
+	};
+
+	let { contractRunnerInput = $bindable() }: ContractRunnerInputProps = $props();
 </script>
 
 <div class="input-container contract-runner">
@@ -7,6 +12,7 @@
 		<label for="contract-runner">Contract Runner</label>
 	</div>
 	<input
+		bind:value={contractRunnerInput}
 		type="text"
 		id="contract-runner"
 		name="contract-runner"

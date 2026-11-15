@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { Target } from '$lib/types';
+	import type { ContractTarget } from '$lib/types';
 	import { fade } from 'svelte/transition';
 
 	import MissionInput from './components/MissionInput.svelte';
@@ -9,6 +9,7 @@
 	import ContractRunnerInput from './components/ContractRunnerInput.svelte';
 	import ScoreInput from './components/ScoreInput.svelte';
 	import DateInput from './components/DateInput.svelte';
+	import { GetYoutubeVideoId, ScoreToTimeString } from '$lib/utils/formatting.js';
 
 	let { form } = $props();
 
@@ -17,11 +18,36 @@
 		targetsAdded = [];
 	}
 
+	let targetsAdded = $state<ContractTarget[]>([]);
+	let videoInput = $state<string>();
+	let contractRunnerInput = $state<string>();
 	let scoreInput = $state<number>();
-
-	let targetsAdded = $state<Target[]>([]);
+	let dateInput = $state<string>();
 
 	let formUpdatePopupActive = $state(false);
+
+	let disableButton = $derived.by(() => {
+		if (missionInput === '') {
+			return true;
+		}
+		if (targetsAdded.length === 0) {
+			return true;
+		}
+		if (videoInput === undefined || GetYoutubeVideoId(videoInput) === null) {
+			return true;
+		}
+		if (contractRunnerInput === undefined) {
+			return true;
+		}
+		if (dateInput === undefined || dateInput === '') {
+			return true;
+		}
+		if (ScoreToTimeString(scoreInput) === 'Error No Time') {
+			return true;
+		}
+
+		return false;
+	});
 </script>
 
 <main>
@@ -36,7 +62,6 @@
 			class="contract-form"
 			method="POST"
 			use:enhance={() => {
-				console.log('ENHANCE');
 				return async ({ result, update }) => {
 					if (result.type === 'success') {
 						targetsAdded = [];
@@ -57,12 +82,12 @@
 			{#key missionInput}
 				<TargetsInput bind:targetsAdded {missionInput} />
 			{/key}
-			<VideoInput />
-			<ContractRunnerInput />
+			<VideoInput bind:videoInput />
+			<ContractRunnerInput bind:contractRunnerInput />
 			<ScoreInput bind:scoreInput />
-			<DateInput />
+			<DateInput bind:dateInput />
 
-			<button class="submit" type="submit">Submit</button>
+			<button class="submit" type="submit" disabled={disableButton}>Submit</button>
 
 			<!-- TODO SEPERATE FORM IF CONTRACT ID IS HAD -->
 			<!-- CONTRACT ID -->
@@ -146,10 +171,14 @@
 		border: 2px solid var(--base-color-8);
 		border-radius: 5px;
 		background-color: var(--base-color-5);
-		&:hover {
+		&:hover:not(:disabled) {
 			background-color: var(--primary-color);
 			border-color: var(--base-color-12);
 			text-shadow: 0 0 2px var(--base-color-1);
+		}
+		&:disabled {
+			cursor: not-allowed;
+			opacity: 50%;
 		}
 	}
 

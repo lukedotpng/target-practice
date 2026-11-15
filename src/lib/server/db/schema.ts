@@ -9,6 +9,7 @@ import {
 	serial,
 	text,
 	timestamp,
+	unique,
 	varchar
 } from 'drizzle-orm/mysql-core';
 import type { AdapterAccountType } from '@auth/sveltekit/adapters';
@@ -24,24 +25,29 @@ export const targetSchema = mysqlTable('targets', {
 	imageId: text('image_id').notNull()
 });
 
-export const contractSchema = mysqlTable('contracts', {
-	id: serial().primaryKey(),
-	mission: text({
-		// Silly workaround for type errors
-		enum: [MISSIONS[0], ...MISSIONS.slice(1)]
-	}).notNull(),
-	time: int(),
-	score: int().notNull().default(-1),
-	videoId: text('video_id').notNull(),
-	videoTimestamp: int('video_timestamp').notNull().default(0),
-	contractRunner: text('contract_runner').notNull(),
-	dateUploaded: date('date_uploaded').notNull(),
-	gameId: text('game_id'),
-	platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),
-	userSubmitted: varchar('user_submitted', { length: 255 }).references(() => userSchema.id),
-	dateAdded: timestamp('date_added').defaultNow(),
-	verified: boolean().notNull().default(true)
-});
+export const contractSchema = mysqlTable(
+	'contracts',
+	{
+		id: serial().primaryKey(),
+		mission: varchar({
+			length: 30,
+			// Silly workaround for type errors
+			enum: [MISSIONS[0], ...MISSIONS.slice(1)]
+		}).notNull(),
+		time: int(),
+		score: int().notNull().default(-1),
+		videoId: varchar('video_id', { length: 11 }).notNull(),
+		videoTimestamp: int('video_timestamp').notNull().default(0),
+		contractRunner: text('contract_runner').notNull(),
+		dateUploaded: date('date_uploaded').notNull(),
+		gameId: text('game_id'),
+		platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),
+		userSubmitted: varchar('user_submitted', { length: 255 }).references(() => userSchema.id),
+		dateAdded: timestamp('date_added').defaultNow(),
+		verified: boolean().notNull().default(true)
+	},
+	(table) => [unique('unique_contract_id').on(table.mission, table.score, table.videoId)]
+);
 
 export const targetContractEntrySchema = mysqlTable('target_contract_entries', {
 	id: serial().primaryKey(),
@@ -50,9 +56,8 @@ export const targetContractEntrySchema = mysqlTable('target_contract_entries', {
 		.references(() => targetSchema.id),
 	contractId: bigint('contract_id', { mode: 'number', unsigned: true })
 		.notNull()
-		.references(() => contractSchema.id),
-	killMethod: text('kill_method'),
-	disguise: text('disguise')
+		.references(() => contractSchema.id, { onDelete: 'cascade' }),
+	killMethod: text('kill_method')
 });
 
 // AUTH SCHEMAS
