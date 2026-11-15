@@ -31,7 +31,7 @@ export function GetYoutubeVideoId(url: string): string | null {
 	return null;
 }
 
-export function SecondsToTimeString(totalSeconds: number) {
+export function SecondsToTimeString(totalSeconds: number, showMinutes?: boolean) {
 	const minutes = Math.floor(totalSeconds / 60);
 	const seconds = totalSeconds % 60;
 	const secondsFixed = seconds.toFixed(3);
@@ -40,10 +40,14 @@ export function SecondsToTimeString(totalSeconds: number) {
 	const secondsString =
 		seconds < 10 ? (seconds === 0 ? '00.000' : '0' + secondsFixed) : secondsFixed;
 
-	return minutesString + ':' + secondsString;
+	if (showMinutes) {
+		return minutesString + ':' + secondsString;
+	} else {
+		return secondsString;
+	}
 }
 
-export function ScoreToTimeString(score: number | undefined) {
+export function ScoreToTimeString(score: number | undefined, showMinutes?: boolean) {
 	if (score === undefined) {
 		return 'Error No Time';
 	}
@@ -53,5 +57,5 @@ export function ScoreToTimeString(score: number | undefined) {
 		return 'Error No Time';
 	}
 
-	return SecondsToTimeString(seconds);
+	return SecondsToTimeString(seconds, showMinutes);
 }

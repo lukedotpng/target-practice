@@ -7,7 +7,7 @@
 	};
 
 	let { scoreInput = $bindable() }: ScoreInputProps = $props();
-	let calculatedTimeString = $derived.by(() => ScoreToTimeString(scoreInput));
+	let calculatedTimeString = $derived.by(() => ScoreToTimeString(scoreInput, true));
 
 	function HandleScoreInput(
 		e: Event & {
