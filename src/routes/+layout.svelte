@@ -139,9 +139,6 @@
 			border-color: var(--base-color-8);
 			border-style: solid;
 			border-radius: 5px;
-			&:open {
-				border-radius: 5px 5px 0 0;
-			}
 			transition: border-radius 0.1s;
 
 			&:focus {
