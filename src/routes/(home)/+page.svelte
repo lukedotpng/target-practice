@@ -7,7 +7,7 @@
 	let missionInput = $state('');
 	function OnChangeMission() {
 		targetsAdded = [];
-		contractVideosPromise = undefined;
+		contractVideos = [];
 	}
 
 	let targetsAdded = $state<Target[]>([]);
@@ -40,7 +40,6 @@
 			...targetsAdded.slice(targetToRemoveIndex + 1)
 		];
 		targetsAdded = updatedTargetsAdded;
-		console.log(updatedTargetsAdded);
 
 		RefetchVideos();
 	}
@@ -76,10 +75,11 @@
 		}, 200);
 	}
 
-	let contractVideosPromise = $state<Promise<Contract[]>>();
+	let contractVideos = $state<Contract[]>();
+	let loading = $state(false);
 	function RefetchVideos() {
 		if (targetsAdded.length === 0 || missionInput === '') {
-			contractVideosPromise = undefined;
+			contractVideos = [];
 			return;
 		}
 		let targetsParam = '';
@@ -89,14 +89,16 @@
 				targetsParam += '|';
 			}
 		}
-		console.log(targetsParam);
 
-		contractVideosPromise = fetch('/api/contracts/search?targets=' + targetsParam).then((res) => {
-			const data = res.json();
-			console.log(data);
-			return data;
-		});
-		console.log('fetching contracts with targets:', targetsAdded);
+		loading = true;
+		fetch('/api/contracts/search?targets=' + targetsParam)
+			.then((res) => res.json())
+			.then((data) => {
+				contractVideos = data;
+				loading = false;
+				return data;
+			});
+		console.log('fetching contracts with targets:', targetsParam);
 	}
 </script>
 
@@ -233,18 +235,21 @@
 				{/each}
 			</ol>
 		</div>
+		<div class="gap"></div>
+		<div class="loading-text">
+			{#if loading}
+				<p>Loading...</p>
+			{/if}
+		</div>
 	</section>
 	<section class="videos">
-		{#if contractVideosPromise === undefined}
+		{#if contractVideos === undefined}
 			<p>Search for a target to find videos!</p>
-		{/if}
-		{#await contractVideosPromise}
-			<p>Loading...</p>
-		{:then contractVideos}
+		{:else if contractVideos.length > 0}
 			{#each contractVideos as contract (contract.id)}
-				<ContractVideo {contract} targetsSearched={targetsAdded} />
+				<ContractVideo {contract} targetsSearched={targetsAdded} {AddTarget} {RemoveTarget} />
 			{/each}
-		{/await}
+		{/if}
 	</section>
 </main>
 
@@ -266,9 +271,10 @@
 	}
 
 	.filters {
+		display: flex;
+		flex-direction: column;
 		width: 25ch;
 		/*height: 100%;*/
-		gap: 1rem;
 
 		border-right: 4px solid var(--base-color-6);
 
@@ -439,6 +445,14 @@
 					}
 				}
 			}
+		}
+
+		.gap {
+			flex: 1;
+		}
+
+		.loading-text {
+			text-align: center;
 		}
 	}
 
