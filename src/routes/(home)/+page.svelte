@@ -15,6 +15,8 @@
 	let targetsDatalistPromise = $state<Promise<Target[]>>();
 	let targetsListFetchIntervalRef: NodeJS.Timeout | null = null;
 
+	let exclusiveSearch = $state(false);
+
 	function AddTarget(targetToAdd: Target) {
 		if (targetsAdded.filter((target) => target.id === targetToAdd.id).length > 0) {
 			console.error('Error: Target has already been added');
@@ -91,7 +93,7 @@
 		}
 
 		loading = true;
-		fetch('/api/contracts/search?targets=' + targetsParam)
+		fetch('/api/contracts/search?targets=' + targetsParam + '&exclusive=' + exclusiveSearch)
 			.then((res) => res.json())
 			.then((data) => {
 				contractVideos = data;
@@ -242,6 +244,16 @@
 					</li>
 				{/each}
 			</ol>
+		</div>
+		<div class="settings">
+			<input
+				type="checkbox"
+				name="exclusive-search"
+				id="exclusive-search"
+				bind:checked={exclusiveSearch}
+				onchange={RefetchVideos}
+			/>
+			<label for="exclusive-search">Exclusive Search</label>
 		</div>
 		<div class="gap"></div>
 		<div class="loading-text">
@@ -405,6 +417,11 @@
 				list-style: none;
 				.targets-list-item {
 					display: list-item;
+					border-top: 2px solid var(--base-color-6);
+					&:last-child {
+						border-bottom: 2px solid var(--base-color-6);
+					}
+
 					button {
 						width: 100%;
 						display: grid;
@@ -413,7 +430,6 @@
 						padding: 0.2rem 0;
 						background-color: var(--base-color-3);
 						border: none;
-						border-top: 2px solid var(--base-color-6);
 
 						&:nth-child(even) {
 							background-color: var(--base-color-5);
