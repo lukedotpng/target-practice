@@ -221,8 +221,16 @@
 					<li class="targets-list-item" aria-describedby="removetargetdescription">
 						<button type="button" onclick={() => RemoveTarget(target)}>
 							<div class="info">
-								<span class="name">{target.name}</span>
-								<span class="description">{target.description}</span>
+								<img
+									src={'https://ik.imagekit.io/ldt/actors/' + target.imageId}
+									alt={target.name}
+								/>
+								<div>
+									<span class="name">{target.name}</span>
+									{#if target.description}
+										<span class="description">{target.description}</span>
+									{/if}
+								</div>
 							</div>
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 								<!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc. -->
@@ -273,7 +281,7 @@
 	.filters {
 		display: flex;
 		flex-direction: column;
-		width: 25ch;
+		width: 30ch;
 		/*height: 100%;*/
 
 		border-right: 4px solid var(--base-color-6);
@@ -417,18 +425,31 @@
 							border-radius: 0 0 3px 3px;
 						}
 						.info {
-							text-align: left;
-							& .name {
-								display: block;
-								font-size: var(--step-0);
-								margin: 0;
-								padding: 0;
-							}
+							display: grid;
+							align-items: center;
+							grid-template-columns: auto 1fr;
+							gap: 0.5rem;
 
-							& .description {
-								font-size: var(--step--2);
-								font-style: italic;
-								display: block;
+							text-align: left;
+							& img {
+								width: 5rem;
+							}
+							div {
+								display: grid;
+								align-items: center;
+
+								.name {
+									display: block;
+									font-size: var(--step-0);
+									margin: 0;
+									padding: 0;
+								}
+
+								.description {
+									font-size: var(--step--2);
+									font-style: italic;
+									display: block;
+								}
 							}
 						}
 						svg {
