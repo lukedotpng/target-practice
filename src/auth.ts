@@ -23,6 +23,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 	providers: [
 		Discord({
 			authorization: { params: { scope: 'identify' } },
+			issuer: 'https://discord.com',
 			async profile(profile) {
 				return {
 					...profile,
