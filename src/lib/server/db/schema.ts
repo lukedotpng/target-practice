@@ -44,7 +44,7 @@ export const contractSchema = mysqlTable(
 		platform: text({ enum: ['epic', 'steam', 'xbox', 'playstation', 'switch'] }),
 		userSubmitted: varchar('user_submitted', { length: 255 }).references(() => userSchema.id),
 		dateAdded: timestamp('date_added').defaultNow(),
-		verified: boolean().notNull().default(true)
+		verified: boolean().notNull().default(false)
 	},
 	(table) => [unique('unique_contract_id').on(table.mission, table.score, table.videoId)]
 );
