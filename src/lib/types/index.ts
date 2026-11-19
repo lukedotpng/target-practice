@@ -3,6 +3,7 @@ import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export type TargetInsert = InferInsertModel<typeof targetSchema>;
 export type ContractInsert = InferInsertModel<typeof contractSchema>;
+export type ContractUpdate = Omit<InferInsertModel<typeof contractSchema>, 'dateUploaded'>;
 export type TargetContractEntryInsert = InferInsertModel<typeof targetContractEntrySchema>;
 
 export type TargetSelect = InferSelectModel<typeof targetSchema>;
