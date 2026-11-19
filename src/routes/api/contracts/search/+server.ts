@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { contractSchema, targetContractEntrySchema } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
-import { countDistinct, eq, inArray } from 'drizzle-orm';
+import { and, countDistinct, eq, inArray, SQL } from 'drizzle-orm';
 
 export async function GET({ url }) {
 	const targetsParam = url.searchParams.get('targets');
@@ -17,6 +17,14 @@ export async function GET({ url }) {
 		if (!isNaN(id)) {
 			targetIds.push(id);
 		}
+	}
+
+	let showQuery = url.searchParams.get('show');
+	const showQueryOptions = ['all', 'verified', 'unverified'];
+	if (showQuery === null || !showQueryOptions.includes(showQuery.toLowerCase())) {
+		showQuery = 'verified';
+	} else {
+		showQuery = showQuery.toLowerCase();
 	}
 
 	const exclusiveSearchQuery = url.searchParams.get('exclusive');
@@ -41,8 +49,20 @@ export async function GET({ url }) {
 				.from(targetContractEntrySchema)
 				.where(inArray(targetContractEntrySchema.targetId, targetIds));
 
+	const filters: SQL[] = [];
+	switch (showQuery) {
+		case 'all':
+			break;
+		case 'verified':
+			filters.push(eq(contractSchema.verified, true));
+			break;
+		case 'unverified':
+			filters.push(eq(contractSchema.verified, false));
+			break;
+	}
+
 	const contractData = await db.query.contractSchema.findMany({
-		where: inArray(contractSchema.id, targetContractEntrySelect),
+		where: and(inArray(contractSchema.id, targetContractEntrySelect), ...filters),
 		with: {
 			targetContractEntries: {
 				with: {

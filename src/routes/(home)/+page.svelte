@@ -73,7 +73,6 @@
 					'&excluded=' +
 					excludedTargetsParam
 			).then((res) => res.json()) as Promise<Target[]>;
-			console.log('fetching content with query:', searchQuery);
 		}, 200);
 	}
 
@@ -93,14 +92,18 @@
 		}
 
 		loading = true;
-		fetch('/api/contracts/search?targets=' + targetsParam + '&exclusive=' + exclusiveSearch)
+		fetch(
+			'/api/contracts/search?targets=' +
+				targetsParam +
+				'&show=verified&exclusive=' +
+				exclusiveSearch
+		)
 			.then((res) => res.json())
 			.then((data) => {
 				contractVideos = data;
 				loading = false;
 				return data;
 			});
-		console.log('fetching contracts with targets:', targetsParam);
 	}
 </script>
 
