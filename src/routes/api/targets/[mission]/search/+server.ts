@@ -54,7 +54,5 @@ export async function GET({ params, url }) {
 		.orderBy(orderBySql)
 		.limit(10);
 
-	console.log(targetData);
-
 	return json(targetData);
 }

@@ -61,7 +61,7 @@ export const actions = {
 			let errorMessage = '';
 			if (errorTree.properties) {
 				for (const prop of Object.entries(errorTree.properties)) {
-					console.log(prop[0] + ':', prop[1].errors[0]);
+					console.error(prop[0] + ':', prop[1].errors[0]);
 					errorMessage += '> ' + prop[1].errors[0] + '\n';
 				}
 			}

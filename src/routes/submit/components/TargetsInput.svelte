@@ -72,7 +72,6 @@
 					excludedTargetsParam +
 					'&ignorecontracts=true'
 			).then((res) => res.json()) as Promise<Target[]>;
-			console.log('fetching content with query:', searchQuery);
 		}, 200);
 	}
 </script>
