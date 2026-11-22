@@ -101,6 +101,11 @@
 			.then((res) => res.json())
 			.then((data) => {
 				contractVideos = data;
+				if (contractVideos) {
+					contractVideos.sort(
+						(a, b) => new Date(b.dateUploaded).getTime() - new Date(a.dateUploaded).getTime()
+					);
+				}
 				loading = false;
 				return data;
 			});
