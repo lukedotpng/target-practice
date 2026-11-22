@@ -27,9 +27,6 @@ export async function GET({ params, url, platform }) {
 		}
 	}
 
-	console.log('platform:', platform);
-	console.log('json:', JSON.stringify(platform, null, 2));
-
 	if (platform === undefined) {
 		return error(500, 'No platform context');
 	}
