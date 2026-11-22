@@ -256,7 +256,7 @@
 				bind:checked={exclusiveSearch}
 				onchange={RefetchVideos}
 			/>
-			<label for="exclusive-search">Exclusive Search</label>
+			<label for="exclusive-search">Must Include All Targets</label>
 		</div>
 		<div class="gap"></div>
 		<div class="loading-text">
