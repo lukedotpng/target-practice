@@ -227,7 +227,7 @@
 						<button type="button" onclick={() => RemoveTarget(target)}>
 							<div class="info">
 								<img
-									src={'https://ik.imagekit.io/ldt/actors/' + target.imageId}
+									src={'https://ik.imagekit.io/ldt/actors/' + target.imageId.toLowerCase()}
 									alt={target.name}
 								/>
 								<div>
