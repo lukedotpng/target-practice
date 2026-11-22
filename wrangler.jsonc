@@ -2,15 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "target-practice",
   "compatibility_date": "2026-11-16",
-  "compatibility_flags": ["nodejs_compat","nodejs_compat_populate_process_env"],
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+  "secrets": { "required": ["DATABASE_URL", "AUTH_DRIZZLE_URL", "AUTH_SECRET", "AUTH_DISCORD_ID", "AUTH_DISCORD_SECRET"] },
   "main": ".svelte-kit/cloudflare/_worker.js",
   "assets": {
-    "binding": "ASSETS",
-    "directory": ".svelte-kit/cloudflare"
+  	"binding": "ASSETS",
+  	"directory": ".svelte-kit/cloudflare"
   },
   "workers_dev": true,
   "preview_urls": true,
   "observability": {
-    "enabled": true
-  }
+  	"enabled": true
+  },
+  "hyperdrive": [
+  	{
+  		"binding": "HYPERDRIVE",
+  		"id": "d30e86671154435491e7fd4b4e1eee65",
+        "localConnectionString": "mysql://root:targetpass@localhost:3306/targetpractice"
+  	}
+  ]
 }

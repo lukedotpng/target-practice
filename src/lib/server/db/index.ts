@@ -1,9 +1,20 @@
 import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+import { createConnection } from 'mysql2/promise';
 import * as schema from './schema';
 
-if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+export async function GetDrizzleConnection(platform: App.Platform) {
+	const connection = await createConnection({
+		host: platform.env.HYPERDRIVE.host,
+		user: platform.env.HYPERDRIVE.user,
+		password: platform.env.HYPERDRIVE.password,
+		database: platform.env.HYPERDRIVE.database,
+		port: platform.env.HYPERDRIVE.port,
 
-const client = mysql.createPool(process.env.DATABASE_URL);
+		// Required to enable mysql2 compatibility for Workers
+		disableEval: true
+	});
 
-export const db = drizzle(client, { schema, mode: 'default' });
+	// Create the Drizzle client with the mysql2 driver connection
+	const db = drizzle(connection, { schema, mode: 'default' });
+	return db;
+}

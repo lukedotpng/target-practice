@@ -1,9 +1,9 @@
-import { db } from '$lib/server/db';
+import { GetDrizzleConnection } from '$lib/server/db/index.js';
 import { contractSchema, targetContractEntrySchema } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
 import { and, countDistinct, eq, inArray, SQL } from 'drizzle-orm';
 
-export async function GET({ url }) {
+export async function GET({ url, platform }) {
 	const targetsParam = url.searchParams.get('targets');
 	if (!targetsParam) {
 		return error(400, 'Must provide a list of target ids');
@@ -36,6 +36,12 @@ export async function GET({ url }) {
 	if (targetIds.length === 0) {
 		return error(400, 'Could not read list of targets');
 	}
+
+	if (platform === undefined) {
+		return error(500, 'No platform context');
+	}
+
+	const db = await GetDrizzleConnection(platform);
 
 	const targetContractEntrySelect = exclusiveSearch
 		? db

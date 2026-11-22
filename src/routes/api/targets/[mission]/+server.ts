@@ -1,9 +1,15 @@
-import { db } from '$lib/server/db';
 import { targetSchema } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
+import { GetDrizzleConnection } from '$lib/server/db';
 
-export async function GET({ params }) {
+export async function GET({ params, platform }) {
+	if (platform === undefined) {
+		return error(500, 'No platform context');
+	}
+
+	const db = await GetDrizzleConnection(platform);
+
 	const targetData = await db
 		.select()
 		.from(targetSchema)

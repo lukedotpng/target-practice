@@ -1,7 +1,7 @@
 import type { ContractInsert, ContractUpdate, TargetContractEntryInsert } from '$lib/types';
 import { eq } from 'drizzle-orm';
-import { db } from '.';
 import { contractSchema, targetContractEntrySchema } from './schema';
+import { GetDrizzleConnection } from '.';
 
 type InsertContractResponse =
 	| {
@@ -12,11 +12,14 @@ type InsertContractResponse =
 export async function InsertContract(
 	contractData: ContractInsert,
 	targetIds: number[],
-	targetKills: string[]
+	targetKills: string[],
+	platform: App.Platform
 ): Promise<InsertContractResponse> {
 	let contractInsertRes: {
 		id: number;
 	}[];
+
+	const db = await GetDrizzleConnection(platform);
 
 	let errorMessage = 'Failed to add contract';
 
@@ -83,12 +86,14 @@ export async function InsertContract(
 	return { success: true };
 }
 
-export async function UpdateContract(contractData: ContractUpdate) {
+export async function UpdateContract(contractData: ContractUpdate, platform: App.Platform) {
 	let errorMessage = 'Failed to update contract';
 
 	if (contractData.id === undefined) {
 		return { success: false, errorMessage: 'Contract data missing id' };
 	}
+
+	const db = await GetDrizzleConnection(platform);
 
 	try {
 		await db
@@ -122,8 +127,15 @@ export async function UpdateContract(contractData: ContractUpdate) {
 	return { success: true };
 }
 
-export async function UpdateTargetKillMethod(targetEntryId: number, killMethod: string) {
+export async function UpdateTargetKillMethod(
+	targetEntryId: number,
+	killMethod: string,
+	platform: App.Platform
+) {
+	const db = await GetDrizzleConnection(platform);
+
 	let errorMessage = 'Failed to update target kill';
+
 	try {
 		await db
 			.update(targetContractEntrySchema)

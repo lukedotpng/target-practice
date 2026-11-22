@@ -1,4 +1,4 @@
-import { db } from '$lib/server/db';
+import { GetDrizzleConnection } from '$lib/server/db';
 import { accountSchema, sessionSchema, userSchema } from '$lib/server/db/schema';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { SvelteKitAuth, type DefaultSession } from '@auth/sveltekit';
@@ -19,28 +19,54 @@ declare module '@auth/sveltekit' {
 	}
 }
 
-export const { handle, signIn, signOut } = SvelteKitAuth({
-	providers: [
-		Discord({
-			authorization: { params: { scope: 'identify' } },
-			issuer: 'https://discord.com',
-			async profile(profile) {
-				return {
-					...profile,
-					admin: false
-				};
+export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
+	if (event.platform === undefined) {
+		return {
+			providers: [
+				Discord({
+					authorization: { params: { scope: 'identify' } },
+					issuer: 'https://discord.com',
+					async profile(profile) {
+						return {
+							...profile,
+							admin: false
+						};
+					}
+				})
+			],
+			callbacks: {
+				session({ session }) {
+					return session;
+				}
+			},
+			trustHost: true
+		};
+	}
+
+	const db = await GetDrizzleConnection(event.platform);
+	return {
+		providers: [
+			Discord({
+				authorization: { params: { scope: 'identify' } },
+				issuer: 'https://discord.com',
+				async profile(profile) {
+					return {
+						...profile,
+						admin: false
+					};
+				}
+			})
+		],
+		adapter: DrizzleAdapter(db, {
+			usersTable: userSchema,
+			accountsTable: accountSchema,
+			sessionsTable: sessionSchema
+		}),
+		callbacks: {
+			session({ session }) {
+				return session;
 			}
-		})
-	],
-	adapter: DrizzleAdapter(db, {
-		usersTable: userSchema,
-		accountsTable: accountSchema,
-		sessionsTable: sessionSchema
-	}),
-	callbacks: {
-		session({ session }) {
-			return session;
-		}
-	},
-	trustHost: true
+		},
+		trustHost: true
+	};
 });

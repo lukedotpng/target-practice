@@ -4,9 +4,9 @@ import { GetYoutubeVideoId } from '$lib/utils/formatting';
 import { MISSIONS } from '$lib/utils/constants';
 import z from 'zod';
 import { UpdateContract, UpdateTargetKillMethod } from '$lib/server/db/actions';
-import { db } from '$lib/server/db';
 import { contractSchema } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { GetDrizzleConnection } from '$lib/server/db';
 
 export const load: PageServerLoad = async (event) => {
 	const session = await event.locals.auth();
@@ -18,6 +18,12 @@ export const load: PageServerLoad = async (event) => {
 	if (!session.user.admin) {
 		error(401, 'Not Authorized');
 	}
+
+	if (!event.platform) {
+		error(500, 'No platform context');
+	}
+
+	const db = await GetDrizzleConnection(event.platform);
 
 	const contractData = await db.query.contractSchema.findMany({
 		where: eq(contractSchema.verified, false),
@@ -54,8 +60,15 @@ const TargetZ = z.object({
 });
 
 export const actions = {
-	updatecontract: async ({ locals, request }) => {
+	updatecontract: async ({ locals, request, platform }) => {
 		const formData = await request.formData();
+
+		if (platform === undefined) {
+			return fail(401, {
+				success: false,
+				errorMessage: 'No platform context'
+			});
+		}
 
 		const session = await locals.auth();
 		if (!session?.user) {
@@ -118,7 +131,7 @@ export const actions = {
 			verified: parsedForm.data.verified
 		};
 
-		const res = await UpdateContract(contract);
+		const res = await UpdateContract(contract, platform);
 
 		if (!res.success) {
 			return fail(400, {
@@ -131,8 +144,15 @@ export const actions = {
 			success: true
 		};
 	},
-	updatetarget: async ({ locals, request }) => {
+	updatetarget: async ({ locals, request, platform }) => {
 		const formData = await request.formData();
+
+		if (platform === undefined) {
+			return fail(401, {
+				success: false,
+				errorMessage: 'No platform context'
+			});
+		}
 
 		const session = await locals.auth();
 		if (!session?.user) {
@@ -168,7 +188,8 @@ export const actions = {
 
 		const res = await UpdateTargetKillMethod(
 			parsedForm.data.targetEntryId,
-			parsedForm.data.killMethod
+			parsedForm.data.killMethod,
+			platform
 		);
 
 		if (!res.success) {

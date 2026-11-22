@@ -34,7 +34,7 @@ const ContractZ = z.object({
 });
 
 export const actions = {
-	default: async ({ locals, request }) => {
+	default: async ({ locals, request, platform }) => {
 		const formData = await request.formData();
 
 		const session = await locals.auth();
@@ -42,6 +42,13 @@ export const actions = {
 			return fail(401, {
 				success: false,
 				errorMessage: 'Not Authorized'
+			});
+		}
+
+		if (platform === undefined) {
+			return fail(500, {
+				success: false,
+				errorMessage: 'No platform context'
 			});
 		}
 
@@ -103,7 +110,8 @@ export const actions = {
 		const res = await InsertContract(
 			contract,
 			parsedForm.data.targets,
-			parsedForm.data.targetKills
+			parsedForm.data.targetKills,
+			platform
 		);
 
 		if (!res.success) {

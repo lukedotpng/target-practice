@@ -1,9 +1,9 @@
-import { db } from '$lib/server/db';
+import { GetDrizzleConnection } from '$lib/server/db';
 import { targetSchema, targetContractEntrySchema } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
 import { and, count, eq, like, notInArray, sql } from 'drizzle-orm';
 
-export async function GET({ params, url }) {
+export async function GET({ params, url, platform }) {
 	const filterQuery = url.searchParams.get('query');
 	if (!filterQuery) {
 		return error(400, 'Must provide a search query');
@@ -26,6 +26,15 @@ export async function GET({ params, url }) {
 			}
 		}
 	}
+
+	console.log('platform:', platform);
+	console.log('json:', JSON.stringify(platform, null, 2));
+
+	if (platform === undefined) {
+		return error(500, 'No platform context');
+	}
+
+	const db = await GetDrizzleConnection(platform);
 
 	const orderBySql = ignoreContracts
 		? sql`locate(${filterQuery},${targetSchema.name}), ${targetSchema.name}`
