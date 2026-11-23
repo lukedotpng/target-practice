@@ -187,7 +187,7 @@
 									<span class="name">{target.name}</span>
 									<span class="description">{target.description}</span>
 								</div>
-								{#if target.contractCount && target.contractCount > 0}
+								{#if target.contractCount && target.contractCount > 0 && target.contractVerified}
 									<button type="button" class="add-target" onclick={() => AddTarget(target)}>
 										<!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc. -->
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">

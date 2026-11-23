@@ -1,7 +1,7 @@
 import { GetDrizzleConnection } from '$lib/server/db';
-import { targetSchema, targetContractEntrySchema } from '$lib/server/db/schema.js';
+import { targetSchema, targetContractEntrySchema, contractSchema } from '$lib/server/db/schema.js';
 import { error, json } from '@sveltejs/kit';
-import { and, count, eq, like, notInArray, sql } from 'drizzle-orm';
+import { and, count, eq, like, max, min, notInArray, sql } from 'drizzle-orm';
 
 export async function GET({ params, url, platform }) {
 	const filterQuery = url.searchParams.get('query');
@@ -35,7 +35,7 @@ export async function GET({ params, url, platform }) {
 
 	const orderBySql = ignoreContracts
 		? sql`locate(${filterQuery},${targetSchema.name}), ${targetSchema.name}`
-		: sql`count(${targetContractEntrySchema.id}) > 0 desc, locate(${filterQuery},${targetSchema.name}), ${targetSchema.name}`;
+		: sql`CASE WHEN max(${contractSchema.verified}) = 1 THEN count(${targetContractEntrySchema.id}) ELSE 0 END desc, locate(${filterQuery},${targetSchema.name}), ${targetSchema.name}`;
 
 	const targetData = await db
 		.select({
@@ -45,7 +45,8 @@ export async function GET({ params, url, platform }) {
 			name: targetSchema.name,
 			description: targetSchema.description,
 			imageId: targetSchema.imageId,
-			contractCount: count(targetContractEntrySchema.id)
+			contractCount: count(targetContractEntrySchema.id),
+			contractVerified: max(contractSchema.verified)
 		})
 		.from(targetSchema)
 		.leftJoin(targetContractEntrySchema, eq(targetContractEntrySchema.targetId, targetSchema.id))
@@ -58,7 +59,8 @@ export async function GET({ params, url, platform }) {
 		)
 		.groupBy(targetSchema.id)
 		.orderBy(orderBySql)
-		.limit(10);
+		.limit(10)
+		.leftJoin(contractSchema, eq(targetContractEntrySchema.contractId, contractSchema.id));
 
 	return json(targetData);
 }
