@@ -7,7 +7,7 @@
 	let missionInput = $state('');
 	function OnChangeMission() {
 		targetsAdded = [];
-		contractVideos = [];
+		contractVideos = undefined;
 	}
 
 	let targetsAdded = $state<Target[]>([]);
@@ -80,7 +80,7 @@
 	let loading = $state(false);
 	function RefetchVideos() {
 		if (targetsAdded.length === 0 || missionInput === '') {
-			contractVideos = [];
+			contractVideos = undefined;
 			return;
 		}
 		let targetsParam = '';
