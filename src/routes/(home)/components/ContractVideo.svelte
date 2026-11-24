@@ -41,7 +41,7 @@
 			{#if TargetSearchedFor(targetContractEntry.target)}
 				<div class="searched-for target">
 					<button onclick={() => RemoveTarget(targetContractEntry.target)}>
-						<p>
+						<p class="name">
 							{targetContractEntry.target.name}
 						</p>
 					</button>
@@ -49,7 +49,7 @@
 			{:else}
 				<div class="target">
 					<button onclick={() => AddTarget(targetContractEntry.target)}>
-						<p>
+						<p class="name">
 							{targetContractEntry.target.name}
 						</p>
 					</button>
@@ -102,9 +102,14 @@
 				display: grid;
 				place-content: center;
 				text-align: center;
-				padding-inline: 0.5ch;
-				padding-block: 0.35rem;
-				text-wrap: nowrap;
+				max-height: 3.25rem;
+
+				& button {
+					p {
+						padding-inline: 0.5ch;
+						padding-block: 0.35rem;
+					}
+				}
 
 				&.searched-for {
 					text-shadow: 0px 0px 2px var(--base-color-5);
@@ -132,11 +137,6 @@
 							}
 						}
 					}
-				}
-
-				p {
-					overflow: hidden;
-					text-overflow: ellipsis;
 				}
 			}
 		}
